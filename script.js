@@ -1,5 +1,12 @@
+let buttons = document.getElementsByTagName('button');
+let roundResult = document.querySelector('.round-result');
+let matchResult = document.querySelector('.match-result');
+let roundsPlayed = 0;
+let playerWins = 0;
+let computerWins = 0;
+
 function getComputerChoice() {
-    randomNumber = Math.floor(Math.random) * 3;
+    randomNumber = Math.floor(Math.random() * 3);
     if (randomNumber === 0) {
         return 'rock';
     } else if (randomNumber === 1) {
@@ -7,6 +14,13 @@ function getComputerChoice() {
     } else {
         return 'scissors';
     }
+}
+
+function displayResult(string) {
+    console.log(string.charAt(4));
+    if (string.charAt(4) === 'W') playerWins++;
+    if (string.charAt(4) === 'L') computerWins++;
+    roundResult.textContent = `Round ${roundsPlayed + 1}: ${string}`;
 }
 
 function playRound(playerSelection, computerSelection) {
@@ -27,14 +41,28 @@ function playRound(playerSelection, computerSelection) {
             if (computerSelection === 'scissors') return 'You Tie!';
             if (computerSelection === 'rock') return 'You Lose! Rock beats Scissors';
             break;
-        default :
+        default:
             return 'Invalid selection';
     }
+
 }
 
-function game() {
-    for (i = 0; i < 5; i++) {
-        let playerSelection = prompt();
-        console.log(playRound(playerSelection, getComputerChoice()));
-    }
+for (let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', () => {
+        displayResult(playRound(buttons[i].textContent, getComputerChoice()));
+        roundsPlayed++;
+        if (roundsPlayed === 5) {
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+            };
+            if (playerWins > computerWins){
+                matchResult.textContent = 'Player Wins';
+            }else if (playerWins < computerWins){
+                matchResult.textContent = 'Computer Wins';
+            }else{
+                matchResult.textContent = "It's a Tie";
+            }
+        }
+    });
 }
+
